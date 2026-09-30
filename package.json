@@ -1,0 +1,14 @@
+{
+  "name": "herdr-hunk",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "hunkdiff": "^0.22.0",
+    "typescript": "^5.9.3"
+  }
+}

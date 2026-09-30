@@ -1,0 +1,27 @@
+id = "spywhere.herdr-hunk"
+version = "0.1.0"
+name = "hunk"
+description = "A hunk diff viewer"
+min_herdr_version = "0.8.0"
+platforms = ["linux", "macos"]
+
+[[actions]]
+id = "open"
+title = "Open review panel"
+command = ["bash", "bin/split.sh", "open"]
+
+[[actions]]
+id = "toggle"
+title = "Toggle review panel"
+command = ["bash", "bin/split.sh", "toggle"]
+
+[[actions]]
+id = "close"
+title = "Close review panel"
+command = ["bash", "bin/split.sh", "close"]
+
+[[panes]]
+id = "hunk"
+title = "Hunk Review"
+placement = "split"
+command = ["bash", "bin/hunk.sh"]
