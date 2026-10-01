@@ -18,7 +18,7 @@ if test -n "$additional_paths"; then
 fi
 
 main() {
-  hunk diff --extension "$HERDR_PLUGIN_ROOT"
+  hunk diff --extension "$HERDR_PLUGIN_ROOT/herdr-reviewer"
   if test $? -ne 0; then
     read
   fi

@@ -4,7 +4,7 @@
   "description": "",
   "type": "module",
   "hunk": {
-    "extensions": ["./extension/herdr-reviewer.ts"],
+    "extensions": ["./herdr-reviewer.ts"],
     "apiVersion": 8
   },
   "scripts": {
