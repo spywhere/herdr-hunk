@@ -1,10 +1,10 @@
 {
-  "name": "herdr-hunk",
+  "name": "herdr-reviewer",
   "version": "1.0.0",
   "description": "",
   "type": "module",
   "hunk": {
-    "extensions": ["./extension/herdr-hunk.ts"],
+    "extensions": ["./extension/herdr-reviewer.ts"],
     "apiVersion": 8
   },
   "scripts": {
