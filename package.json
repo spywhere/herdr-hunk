@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
+  "hunk": {
+    "extensions": ["./extension/herdr-hunk.ts"],
+    "apiVersion": 8
+  },
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
