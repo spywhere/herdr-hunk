@@ -49,7 +49,7 @@ main() {
   esac
 
   local new_pane
-  new_pane="$("$HERDR_BIN_PATH" plugin pane open --plugin spywhere.herdr-hunk --entrypoint hunk --placement split --direction right --focus | jq -r .result.plugin_pane.pane)"
+  new_pane="$("$HERDR_BIN_PATH" plugin pane open --plugin spywhere.herdr-hunk --entrypoint hunk --placement split --direction right --cwd "$WORKSPACE_CWD" --focus | jq -r .result.plugin_pane.pane)"
   "$HERDR_BIN_PATH" pane report-metadata "$(echo "$new_pane" | jq -r .pane_id)" --source 'spywhere.hunk-reviewer' --token 'hunk-reviewer=1'
 }
 
