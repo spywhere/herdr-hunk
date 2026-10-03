@@ -1,3 +1,4 @@
+import { existsSync, readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import type { ExtensionCommandContext, HunkExtensionAPI } from 'hunkdiff/extension';
 
@@ -26,12 +27,14 @@ const herdrCmd = (ctx: ExtensionCommandContext) => (...args: string[]) => {
   }
 }
 
+const configs = existsSync(`${process.env.HERDR_PLUGIN_ROOT}/config.json`) ? JSON.parse(readFileSync(`${process.env.HERDR_PLUGIN_ROOT}/config.json`).toString('utf8')) : {};
+
 export default function (hunk: HunkExtensionAPI) {
   hunk.registerCommand({ id: 'send', title: 'Send notes to agent', key: 'ctrl+s' }, async (ctx) => {
     const snapshot = ctx.review.snapshot();
 
     if (!snapshot || snapshot.notes.length === 0) {
-      ctx.notify("No comment");
+      ctx.notify('No comment');
       return;
     }
 
@@ -100,6 +103,9 @@ export default function (hunk: HunkExtensionAPI) {
         note.summary,
       ].join('\n')
     ).join('\n\n'));
+    if (configs['follow-send'] !== false) {
+      herdr('agent', 'focus', agent.pane_id);
+    }
     const hunkCli = hunkCmd(ctx);
     hunkCli('session', 'comment', 'clear', '--repo', '.', '--all', '--yes');
     ctx.notify(`${notes.length} notes sent to ${agent.agent} (${agent.agent_status}) - ${tabsById.get(agent.tab_id)?.label ?? agent.tab_id}`);

@@ -24,4 +24,4 @@ command = ["bash", "bin/split.sh", "close"]
 id = "hunk"
 title = "Hunk Review"
 placement = "split"
-command = ["sh", "-c", "bash \"$HERDR_PLUGIN_ROOT/bin/hunk.sh\""]
+command = ["sh", "-c", "HERDR_PLUGIN_ROOT=\"$HERDR_PLUGIN_ROOT\" bash \"$HERDR_PLUGIN_ROOT/bin/hunk.sh\""]
