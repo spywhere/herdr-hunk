@@ -7,6 +7,13 @@ fi
 WORKSPACE_ID="$(echo "$HERDR_PLUGIN_CONTEXT_JSON" | jq -r .workspace_id)"
 WORKSPACE_CWD="$(echo "$HERDR_PLUGIN_CONTEXT_JSON" | jq -r .workspace_cwd)"
 
+get_config() {
+  if ! test -f "$HERDR_PLUGIN_CONFIG_DIR/config.json"; then
+    return
+  fi
+  cat "$HERDR_PLUGIN_CONFIG_DIR/config.json" | jq -r "$1"
+}
+
 reviewer_panes() {
   "$HERDR_BIN_PATH" pane list --workspace "$WORKSPACE_ID" | jq -r '.result.panes|map(select(.tokens["hunk-reviewer"]=="1")|.pane_id)[]'
 }
@@ -48,8 +55,13 @@ main() {
       ;;
   esac
 
+  local auto_focus="--focus"
+  if get_config '.auto-focus' = 'false'; then
+    auto_focus=''
+  fi
+
   local new_pane
-  new_pane="$("$HERDR_BIN_PATH" plugin pane open --plugin spywhere.herdr-hunk --entrypoint hunk --placement split --direction right --cwd "$WORKSPACE_CWD" --focus | jq -r .result.plugin_pane.pane)"
+  new_pane="$("$HERDR_BIN_PATH" plugin pane open --plugin spywhere.herdr-hunk --entrypoint hunk --placement split --direction right --cwd "$WORKSPACE_CWD" $auto_focus | jq -r .result.plugin_pane.pane)"
   "$HERDR_BIN_PATH" pane report-metadata "$(echo "$new_pane" | jq -r .pane_id)" --source 'spywhere.hunk-reviewer' --token 'hunk-reviewer=1'
 }
 
