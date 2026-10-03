@@ -9,9 +9,10 @@ WORKSPACE_CWD="$(echo "$HERDR_PLUGIN_CONTEXT_JSON" | jq -r .workspace_cwd)"
 
 get_config() {
   if ! test -f "$HERDR_PLUGIN_CONFIG_DIR/config.json"; then
+    printf '%s' "$2"
     return
   fi
-  cat "$HERDR_PLUGIN_CONFIG_DIR/config.json" | jq -r "$1"
+  cat "$HERDR_PLUGIN_CONFIG_DIR/config.json" | jq -r "$1 // \"$2\""
 }
 
 reviewer_panes() {
@@ -55,6 +56,19 @@ main() {
       ;;
   esac
 
+  local title
+  case "$(get_config .initial-diff uncommitted)" in
+    uncommitted)
+      title="Uncommitted"
+      ;;
+    unpushed)
+      title="Unpushed"
+      ;;
+    trunk)
+      title="Trunk"
+      ;;
+  esac
+
   local auto_focus="--focus"
   if get_config '.auto-focus' = 'false'; then
     auto_focus=''
@@ -62,6 +76,7 @@ main() {
 
   local new_pane
   new_pane="$("$HERDR_BIN_PATH" plugin pane open --plugin spywhere.herdr-hunk --entrypoint hunk --placement split --direction right --cwd "$WORKSPACE_CWD" $auto_focus | jq -r .result.plugin_pane.pane)"
+  "$HERDR_BIN_PATH" pane rename "$(echo "$new_pane" | jq -r .pane_id)" "Hunk Review - $title"
   "$HERDR_BIN_PATH" pane report-metadata "$(echo "$new_pane" | jq -r .pane_id)" --source 'spywhere.hunk-reviewer' --token 'hunk-reviewer=1'
 }
 

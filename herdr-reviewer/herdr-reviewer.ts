@@ -56,12 +56,22 @@ export default function (hunk: HunkExtensionAPI) {
     title: `${item.title} Diff`,
     key: item.key,
   }, async (ctx) => {
+    const herdr = herdrCmd(ctx);
+    const pane = herdr('pane', 'current').pane;
+    const reviewerToken = pane.tokens?.['hunk-reviewer'];
+
+    if (reviewerToken !== '1') {
+      ctx.notify("Not a hunk-reviewer pane");
+      return;
+    }
+
     const hunkCli = hunkCmd(ctx);
     if (item.revset) {
       hunkCli('session', 'reload', '--repo', '.', '--', 'diff', item.revset);
     } else {
       hunkCli('session', 'reload', '--repo', '.', '--', 'diff');
     }
+    herdr('pane', 'rename', pane.pane_id, `Hunk Review - ${item.title}`);
     ctx.notify(`Switched to ${item.title.toLowerCase()} diff`);
   }));
 

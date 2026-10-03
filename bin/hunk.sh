@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-if test -z "$HERDR_BIN_PATH"; then
-  HERDR_BIN_PATH="$(command -v herdr)"
-fi
-
 get_config() {
   if ! test -f "$HERDR_PLUGIN_CONFIG_DIR/config.json"; then
     printf '%s' "$2"
