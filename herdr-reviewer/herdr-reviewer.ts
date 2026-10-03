@@ -29,7 +29,42 @@ const herdrCmd = (ctx: ExtensionCommandContext) => (...args: string[]) => {
 
 const configs = existsSync(`${process.env.HERDR_PLUGIN_ROOT}/config.json`) ? JSON.parse(readFileSync(`${process.env.HERDR_PLUGIN_ROOT}/config.json`).toString('utf8')) : {};
 
+const diffModes: Record<string, {
+  title: string;
+  revset?: string;
+  key?: string;
+}> = {
+  uncommited: {
+    title: 'Uncommitted',
+    key: 'ctrl+w',
+  },
+  unpushed: {
+    title: 'Unpushed',
+    revset: `remote_bookmarks(remote='${configs['default-remote'] ?? 'origin'}')..@`,
+    key: 'ctrl+p',
+  },
+  trunk: {
+    title: 'Trunk',
+    revset: 'trunk()..@',
+    key: 'ctrl+t',
+  },
+};
+
 export default function (hunk: HunkExtensionAPI) {
+  Object.entries(diffModes).forEach(([key, item]) => hunk.registerCommand({
+    id: `diff-${key}`,
+    title: `${item.title} Diff`,
+    key: item.key,
+  }, async (ctx) => {
+    const hunkCli = hunkCmd(ctx);
+    if (item.revset) {
+      hunkCli('session', 'reload', '--repo', '.', '--', 'diff', item.revset);
+    } else {
+      hunkCli('session', 'reload', '--repo', '.', '--', 'diff');
+    }
+    ctx.notify(`Switched to ${item.title.toLowerCase()} diff`);
+  }));
+
   hunk.registerCommand({ id: 'send', title: 'Send notes to agent', key: 'ctrl+s' }, async (ctx) => {
     const snapshot = ctx.review.snapshot();
 
