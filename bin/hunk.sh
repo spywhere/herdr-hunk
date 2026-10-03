@@ -18,7 +18,16 @@ if test -n "$additional_paths"; then
 fi
 
 main() {
-  hunk diff --extension "$HERDR_PLUGIN_ROOT/herdr-reviewer"
+  local auto_reload
+  if get_config '.auto-reload' = 'true'; then
+    auto_reload='--watch'
+  fi
+  local mode
+  mode="$(get_config '.mode // ""')"
+  if test -n "$mode"; then
+    mode="--mode '$mode'"
+  fi
+  hunk diff --extension "$HERDR_PLUGIN_ROOT/herdr-reviewer" $auto_reload $mode
   if test $? -ne 0; then
     read
   fi
