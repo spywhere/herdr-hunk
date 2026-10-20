@@ -75,7 +75,7 @@ export default function (hunk: HunkExtensionAPI) {
     ctx.notify(`Switched to ${item.title.toLowerCase()} diff`);
   }));
 
-  hunk.registerCommand({ id: 'send', title: 'Send notes to agent', key: 'ctrl+s' }, async (ctx) => {
+  hunk.registerCommand({ id: 'send', title: 'Send notes to agent', key: 'ctrl+shift+s' }, async (ctx) => {
     const snapshot = ctx.review.snapshot();
 
     if (!snapshot || snapshot.notes.length === 0) {
