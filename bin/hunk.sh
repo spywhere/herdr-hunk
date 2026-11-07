@@ -31,9 +31,9 @@ main() {
   if test "$(get_config .fast)" = 'false'; then
     fast=''
   fi
-  local auto_reload
-  if test "$(get_config .auto-reload)" = 'true'; then
-    auto_reload='--watch'
+  local auto_reload='--watch'
+  if test "$(get_config .auto-reload)" = 'false'; then
+    auto_reload=''
   fi
   local mode
   mode="$(get_config .mode)"
