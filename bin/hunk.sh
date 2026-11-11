@@ -27,10 +27,6 @@ main() {
       revset='trunk()..@'
       ;;
   esac
-  local fast='--fast'
-  if test "$(get_config .fast)" = 'false'; then
-    fast=''
-  fi
   local auto_reload='--watch'
   if test "$(get_config .auto-reload)" = 'false'; then
     auto_reload=''
